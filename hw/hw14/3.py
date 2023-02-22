@@ -1,31 +1,47 @@
-from fastapi import FastAPI, HTTPException, status, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr, validator
+from datetime import datetime
+from typing import Optional
+import uvicorn
 
 app = FastAPI()
 
-
-class ServerException(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-        self.status = 500
+users = []
 
 
-@app.exception_handler(ServerException)
-def server_exception_handler(request: Request, exc: ServerException):
-    return JSONResponse(
-        content={'message': f'{exc.msg}'},
-        status_code=exc.status,
-    )
+class User(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    date_joined: Optional[datetime] = datetime.now()
+
+    @validator("password")
+    def valid_password(cls, p):
+        if len(p) < 8:
+            raise ValueError('password must be 8 character')
+        return p
+
+    @validator("username")
+    def valid_username(cls, u):
+        for item in users:
+            if u == item.username:
+                raise ValueError('username exist')
+        return u
+
+    @validator("email")
+    def valid_email(cls, e):
+        for item in users:
+            if e == item.email:
+                raise ValueError('email exist')
+        return e
 
 
-@app.get('/')
-def test():
-    try:
-        # some operation that can be raise exception
-        x = 5/0
-    except Exception as e:
-        # raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='some error...')
-        # can send "e" as detail value
+@app.post('/')
+def test(user: User):
+    """ `users` list can be database table"""
+    users.append(user)
+    return {"data": user}
 
-        # with custom exception
-        raise ServerException('server exception raise')
+
+if __name__ == "__main__":
+    uvicorn.run(f"{__name__}:app", reload=True)

@@ -1,47 +1,37 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr, validator
-from datetime import datetime
-from typing import Optional
+from pydantic import BaseModel
+from typing import List
 import uvicorn
+from starlette import status
+from starlette.exceptions import HTTPException
+from starlette.requests import Request
 
 app = FastAPI()
 
-users = []
+
+class Data(BaseModel):
+    data: List
 
 
-class User(BaseModel):
-    username: str
-    password: str
-    email: EmailStr
-    date_joined: Optional[datetime] = datetime.now()
-
-    @validator("password")
-    def valid_password(cls, p):
-        if len(p) < 8:
-            raise ValueError('password must be 8 character')
-        return p
-
-    @validator("username")
-    def valid_username(cls, u):
-        for item in users:
-            if u == item.username:
-                raise ValueError('username exist')
-        return u
-
-    @validator("email")
-    def valid_email(cls, e):
-        for item in users:
-            if e == item.email:
-                raise ValueError('email exist')
-        return e
-
-
-@app.post('/')
-def test(user: User):
-    """ `users` list can be database table"""
-    users.append(user)
-    return {"data": user}
+@app.post('/totalprice')
+def test(request: Request, payload: Data):
+    if request.headers.get('Content-Type').lower() == 'application/json':
+        sum_ = 0
+        for item in payload.data:
+            sum_ += item['price']
+        return {'sum': sum_}
+    else:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='request not a json')
 
 
 if __name__ == "__main__":
     uvicorn.run(f"{__name__}:app", reload=True)
+
+    """sample data for test in postman"""
+    # {"data": [
+    #     {"item1": "mobile", "price": 5000},
+    #     {"item2": "laptop", "price": 15000},
+    #     {"item3": "car", "price": 45000},
+    #     {"item4": "home", "price": 245000}
+    #     ]
+    # }

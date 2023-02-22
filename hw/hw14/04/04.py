@@ -1,27 +1,31 @@
 from fastapi import FastAPI
 import uvicorn
+from starlette.requests import Request
+from starlette.templating import Jinja2Templates
+
+template = Jinja2Templates(directory='.')
 
 app = FastAPI()
 
 
-items = [
-    {"id": 1, 'name': 'nokia', 'description': 'nokia the old mobile phone, usually its not expensive'},
-    {"id": 2, 'name': 'apple', 'description': 'apple is expensive product'},
-    {"id": 3, 'name': 'samsung', 'description': 'samsung smart phone'},
-    {"id": 4, 'name': 'xiaomi', 'description': 'xiaomi is a nemidonam'},
+data = [
+           {'item': 'movie', 'rating': 1},
+           {'item': 'movie', 'rating': 2},
+           {'item': 'movie', 'rating': 3},
 ]
 
 
-@app.get('/')
-def test(search: str):
-    result = []
-    for item in items:
-        name, description = item.get('name'), item.get('description')
-        if search in name or search in description:
-            result.append(item)
+@app.get('/list/')
+def test(request: Request, reverse: bool = True):
+    """ `items` can select from database"""
+    items = [
+        {"item": "mobile", "name": 'Apple iphone 12', "price": 800},
+        {"item": "laptop", "name": 'lenovo gaming', "price": 1700},
+        {"item": "car", "name": 'nisan GTR 2020', "price": 145000},
+    ]
 
-    return {'data': result}
-    # return result
+    context = {"request": request, "items": items, "reverse": reverse}
+    return template.TemplateResponse('04.html', context=context)
 
 
 if __name__ == "__main__":

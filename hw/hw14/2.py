@@ -1,23 +1,36 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status, Request
+from fastapi.responses import JSONResponse
+import uvicorn
 
 app = FastAPI()
 
 
-items = [
-    {"id": 1, 'name': 'nokia', 'description': 'nokia the old mobile phone, usually its not expensive'},
-    {"id": 2, 'name': 'apple', 'description': 'apple is expensive product'},
-    {"id": 3, 'name': 'samsung', 'description': 'samsung smart phone'},
-    {"id": 4, 'name': 'xiaomi', 'description': 'xiaomi is a nemidonam'},
-]
+class ServerException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+        self.status = 500
+
+
+@app.exception_handler(ServerException)
+def server_exception_handler(request: Request, exc: ServerException):
+    return JSONResponse(
+        content={'message': f'{exc.msg}'},
+        status_code=exc.status,
+    )
 
 
 @app.get('/')
-def test(search: str):
-    result = []
-    for item in items:
-        name, description = item.get('name'), item.get('description')
-        if search in name or search in description:
-            result.append(item)
+def test():
+    try:
+        # some operation that can be raise exception
+        x = 5/0
+    except Exception as e:
+        # raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='some error...')
+        # can send "e" as detail value
 
-    return {'data': result}
-    # return result
+        # with custom exception
+        raise ServerException('server exception raise')
+
+
+if __name__ == "__main__":
+    uvicorn.run(f"{__name__}:app", reload=True)

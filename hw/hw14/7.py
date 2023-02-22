@@ -10,28 +10,23 @@ app = FastAPI()
 
 
 class Data(BaseModel):
-    data: List
+    data: List[int]
 
 
-@app.post('/totalprice')
-def test(request: Request, payload: Data):
-    if request.headers.get('Content-Type').lower() == 'application/json':
-        sum_ = 0
-        for item in payload.data:
-            sum_ += item['price']
-        return {'sum': sum_}
-    else:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='request not a json')
+@app.post('/')
+def test(payload: Data):
+    sum_ = 0
+    for number in payload.data:
+        if number % 2 == 0:
+            sum_ += number
+    return [sum_]
+    # return {"data": [sum_]}
 
 
 if __name__ == "__main__":
     uvicorn.run(f"{__name__}:app", reload=True)
 
     """sample data for test in postman"""
-    # {"data": [
-    #     {"item1": "mobile", "price": 5000},
-    #     {"item2": "laptop", "price": 15000},
-    #     {"item3": "car", "price": 45000},
-    #     {"item4": "home", "price": 245000}
-    #     ]
+    # {
+    #     "data": [2, 24, 51, 6, 4, "12"]
     # }
