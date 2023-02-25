@@ -41,6 +41,7 @@ a:hover {
 .section-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
 }
 
 .section-header .left-item {
@@ -188,6 +189,10 @@ ul {
 
 .link-container a {
     color: white;
+}
+
+.link-container a:hover {
+    color:  rgb(255, 115, 166);;
 }
 
 @media screen and (max-width: 600px) {
