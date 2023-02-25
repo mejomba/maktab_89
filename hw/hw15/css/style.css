@@ -190,3 +190,15 @@ ul {
     color: white;
 }
 
+@media screen and (max-width: 600px) {
+    .wrapper {
+        grid-template-columns: 1fr;
+    }
+    .right-section article {
+        margin: 3rem 0.5rem;
+    }
+    .section-header .right-item {
+        padding: 5px 10px;
+        font-size: 0.5rem;
+    }
+}
