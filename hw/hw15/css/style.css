@@ -64,7 +64,7 @@ a:hover {
 }
 
 .material-symbols-outlined.md-18 { 
-    font-size: 18px; 
+    font-size: 1.2rem; 
 }
 
 .article-content {
@@ -153,7 +153,7 @@ a:hover {
     line-height: 2rem;
 }
 
-.left-section .name-container p{
+.left-section .name-container p {
     color: rgb(233, 233, 233);
 }
 
@@ -169,7 +169,7 @@ a:hover {
 }
 
 .left-section .social-container img {
-    width: 32px;
+    width: 1.5rem;
 }
 
 .left-section .social-container a:hover {
