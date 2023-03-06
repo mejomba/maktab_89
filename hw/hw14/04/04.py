@@ -29,4 +29,4 @@ def test(request: Request, reverse: bool = True):
 
 
 if __name__ == "__main__":
-    uvicorn.run(f"{__name__}:app", reload=True)
+    uvicorn.run(f"{__name__}:app")

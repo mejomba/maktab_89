@@ -25,7 +25,7 @@ def test(request: Request, payload: Data):
 
 
 if __name__ == "__main__":
-    uvicorn.run(f"{__name__}:app", reload=True)
+    uvicorn.run(f"{__name__}:app")
 
     """sample data for test in postman"""
     # {"data": [

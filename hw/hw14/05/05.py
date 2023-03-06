@@ -57,4 +57,4 @@ async def user_register(request: Request):
 
 
 if __name__ == "__main__":
-    uvicorn.run(f"{__name__}:app", reload=True)
+    uvicorn.run(f"{__name__}:app")

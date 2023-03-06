@@ -1,0 +1,15 @@
+a:link {
+    text-decoration: none;
+}
+a:hover, img:hover {
+    transition: all 0.4s ease-in-out;
+}
+a:hover {
+    color:  rgb(255, 115, 166);;
+}
+.social-container img {
+    width: 1.6rem;
+}
+.social-container img:hover {
+    scale: 1.3;
+}

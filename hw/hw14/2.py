@@ -24,7 +24,7 @@ def test():
     try:
         # some operation that can be raise exception
         x = 5/0
-    except Exception as e:
+    except ServerException as e:
         # raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='some error...')
         # can send "e" as detail value
 
